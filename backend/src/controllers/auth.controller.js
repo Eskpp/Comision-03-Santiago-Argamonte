@@ -30,16 +30,29 @@ export const login = async (req, res) => {
 
     if (!foundUser) return res.status(400).json({ message: "User not found" });
 
-    const match =  await bcrypt.compare(password, foundUser.password);
+    const match = await bcrypt.compare(password, foundUser.password);
 
-    if (!match) return res.status(400).json({message : "Password mismatch" });
+    if (!match) return res.status(400).json({ message: "Password mismatch" });
 
     const token = await createAccessToken({ id: foundUser._id });
     res.cookie("token", token);
     res.status(200).json(foundUser);
-
   } catch (error) {
-
     res.status(500).json({ message: "Error al logear al usuario ", error });
+  }
+};
+
+export const logout = async (req, res) => {
+  res.cookie("token", "", { expires: new Date(0) });
+  return res.status(200).json({message: "User logged out"});
+};
+
+export const profile = async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.user.id);
+    if (!foundUser) return res.status(400).json({message: "User not found"});
+    res.status(200).json({foundUser});
+  } catch (error) {
+    res.status(500).json({ message: "Error al entrar al perfil ", error });
   }
 };
