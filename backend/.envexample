@@ -1,0 +1,8 @@
+PORT = 3000
+#la variable de entorno USERNAME esta ligada al usuario del sistema operativo
+#deje un usuario en atlas con estos datos
+DB_USERNAME = Profesor
+DB_PASSWORD = epicatramoiii
+CLUSTER_URL = epica.nwpccem.mongodb.net
+
+SECRET_KEY = "secreto"
