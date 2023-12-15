@@ -15,20 +15,15 @@ export const getAllCommentsFromPost = async (req, res) => {
 export const getCommentByID = async (req, res) => {};
 
 export const createComment = async (req, res) => {
-  const { description } = req.body;
-
   try {
-    const newComment = new Comment({
-      description,
-      author: req.user.id, //req.user viene de validateToken
-      post: req.params.pid,
-    });
+    const newComment = await Comment.create({description : req.body.description , author:  req.user.id});
 
     const savedComment = await newComment.save();
     //hacer que el post conozca al comentario
     const post = await Post.findById(req.params.pid);
     post.comments.push(savedComment);
     post.save();
+    //no se si esta logica tiene que estar aca o en el controlador de post
     res.status(200).json(savedComment);
   } catch (error) {
     res.status(500).json({ message: "Error saving comment", error: error });
