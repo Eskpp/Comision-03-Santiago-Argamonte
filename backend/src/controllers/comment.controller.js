@@ -3,7 +3,8 @@ import Post from "../models/post.model.js";
 
 export const getAllCommentsFromPost = async (req, res) => {
   try {
-    const allComments = await Comment.find({ post: req.params.pid });
+    const post = await Post.findById( req.params.pid ).populate('comments');
+    const allComments = post.comments;
     res.status(200).json(allComments);
   } catch (error) {
     res
@@ -12,11 +13,25 @@ export const getAllCommentsFromPost = async (req, res) => {
   }
 };
 
-export const getCommentByID = async (req, res) => {};
+export const getCommentByID = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.pid).populate('comments');
+    const foundComment = post.comments.find(comment => comment._id == req.params.id);
+    if (!foundComment) {
+      return res.status(404).json({ message: "Comment not found in post" });
+    }
+    res.status(200).json(foundComment);
+  } catch (error) {
+    res.status(500).json({ message: "Error al buscar el comentario" });
+  }
+};
 
 export const createComment = async (req, res) => {
   try {
-    const newComment = await Comment.create({description : req.body.description , author:  req.user.id});
+    const newComment = await Comment.create({
+      description: req.body.description,
+      author: req.user.id,
+    });
 
     const savedComment = await newComment.save();
     //hacer que el post conozca al comentario

@@ -9,15 +9,6 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
-export const getComments = async (req, res) => {
-  try {
-    const allComments = await Post.findById(req.params.id).comments();
-    res.status(200).json(allComments);
-  } catch (error) {
-    res.status(500).json({message: "Error al buscar los comentarios del post", error: error});
-  }
-};
-
 export const getPostByID = async (req, res) => {
   const {id} = req.params;
 
