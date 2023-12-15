@@ -49,7 +49,7 @@ export const logout = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    const foundUser = await User.findById(req.user.id);
+    const foundUser = await User.findById(req.user.id); // porque id no tiene _ ?
     if (!foundUser) return res.status(400).json({message: "User not found"});
     res.status(200).json({foundUser});
   } catch (error) {
