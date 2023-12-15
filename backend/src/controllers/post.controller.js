@@ -5,21 +5,23 @@ export const getAllPosts = async (req, res) => {
     const allPosts = await Post.find({});
     res.status(200).json(allPosts);
   } catch (error) {
-    res.status(500).json({message: "Error al buscar los posts", error: error});
+    res
+      .status(500)
+      .json({ message: "Error al buscar los posts", error: error });
   }
 };
 
 export const getPostByID = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
 
   try {
     const foundPost = await Post.findById(id);
     if (!foundPost) {
-      return res.status(404).json({message: "Post not found"});
+      return res.status(404).json({ message: "Post not found" });
     }
     res.status(200).json(foundPost);
   } catch (error) {
-    res.status(500).json({message: "Error al buscar el post"});
+    res.status(500).json({ message: "Error al buscar el post" });
   }
 };
 
@@ -37,26 +39,32 @@ export const createPost = async (req, res) => {
     const savedPost = await newPost.save();
     res.status(200).json(savedPost);
   } catch (error) {
-    res.status(500).json({message: "Error saving post", error: error})
+    res.status(500).json({ message: "Error saving post", error: error });
   }
 };
 
 export const updatePost = async (req, res) => {
   try {
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {new: true}); //new true permite ver los cambios sin actualizar la pagina
-    if (!updatedPost) return res.status(404).json({message: "Post not found"});
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    }); //new true permite ver los cambios sin actualizar la pagina
+    if (!updatedPost)
+      return res.status(404).json({ message: "Post not found" });
     res.status(200).json(updatedPost);
   } catch (error) {
-    res.status(500).json({message: "Error updating post"});
+    res.status(500).json({ message: "Error updating post" });
   }
 };
 
 export const deletePost = async (req, res) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id,{new: true}); //new true permite ver los cambios sin actualizar la pagina
-    if (!deletedPost) return res.status(404).json({message: "Post not found"});
-    res.status(200).json({message: "Post deleted"});
+    const deletedPost = await Post.findByIdAndDelete(req.params.id, {
+      new: true,
+    }); //new true permite ver los cambios sin actualizar la pagina
+    if (!deletedPost)
+      return res.status(404).json({ message: "Post not found" });
+    res.status(200).json({ message: "Post deleted" });
   } catch (error) {
-    res.status(500).json({message: "Error deleting post"});
+    res.status(500).json({ message: "Error deleting post" });
   }
 };

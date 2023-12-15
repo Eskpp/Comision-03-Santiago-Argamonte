@@ -3,7 +3,7 @@ import Post from "../models/post.model.js";
 
 export const getAllCommentsFromPost = async (req, res) => {
   try {
-    const post = await Post.findById( req.params.pid ).populate('comments');
+    const post = await Post.findById(req.params.pid).populate("comments");
     const allComments = post.comments;
     res.status(200).json(allComments);
   } catch (error) {
@@ -15,8 +15,10 @@ export const getAllCommentsFromPost = async (req, res) => {
 
 export const getCommentByID = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.pid).populate('comments');
-    const foundComment = post.comments.find(comment => comment._id == req.params.id);
+    const post = await Post.findById(req.params.pid).populate("comments");
+    const foundComment = post.comments.find(
+      (comment) => comment._id == req.params.id
+    );
     if (!foundComment) {
       return res.status(404).json({ message: "Comment not found in post" });
     }
@@ -45,6 +47,18 @@ export const createComment = async (req, res) => {
   }
 };
 
-export const updateComment = async (req, res) => {};
+export const updateComment = async (req, res) => {
+  try {
+    const updatedComment = await Comment.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedComment) res.status(404).json({ message: 'Comment not found' });
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating comment' });
+  }
+};
 
 export const deleteComment = async (req, res) => {};
