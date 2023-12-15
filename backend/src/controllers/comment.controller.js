@@ -54,11 +54,29 @@ export const updateComment = async (req, res) => {
       req.body,
       { new: true }
     );
-    if (!updatedComment) res.status(404).json({ message: 'Comment not found' });
+    if (!updatedComment) res.status(404).json({ message: "Comment not found" });
     res.status(200).json(updatedComment);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating comment' });
+    res.status(500).json({ message: "Error updating comment" });
   }
 };
 
-export const deleteComment = async (req, res) => {};
+export const deleteComment = async (req, res) => {
+  try {
+    const deletedComment = await Comment.findByIdAndDelete(req.params.id, {
+      new: true,
+    }); //new true permite ver los cambios sin actualizar la pagina
+    if (!deletedComment)
+      return res.status(404).json({ message: "Post not found" });
+    //tengo que irme al post y borrar el comentario del arreglo
+    Post.updateOne(
+      { _id: req.params.pid },
+      { $pullAll: { comments: [{ _id: req.params.id }] } }
+    );
+    //no logre que se borre el id del comentario borrado del post
+
+    res.status(200).json({ message: "Post deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting post" });
+  }
+};
