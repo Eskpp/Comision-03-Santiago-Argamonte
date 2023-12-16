@@ -35,7 +35,7 @@ export const handleErrorValidations = (req,res,next) => {
     const error = validationResult(req);
 
     if (!error.isEmpty()) {
-        return res.status(400).json({message: "Error en la validación de autenticación.", error: error});
+      return res.status(400).json([error.errors[0].msg])
     }
     next();
 }

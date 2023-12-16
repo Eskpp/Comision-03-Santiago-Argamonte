@@ -25,6 +25,10 @@ const postSchema = new Schema(
     imageURL: {
       type: String,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
